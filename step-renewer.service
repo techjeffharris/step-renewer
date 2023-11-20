@@ -1,0 +1,29 @@
+[Unit]
+Description=Step CA Certificate Renewer
+After=network-online.target
+Documentation=https://git.intangible.home.arpa/jeff/step-renewer
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+User=root
+
+EnvironmentFile=/etc/step-renewer/step-renewer.cfg
+
+; ExecCondition checks if the certificate is ready for renewal,
+; based on the exit status of the command.
+; (In systemd 242 or below, you can use ExecStartPre= here.)
+ExecCondition=/etc/step-renewer/bin/step-needs-renewal.sh
+;ExecStartPre=/bin/sh -c 'until host example.com; do sleep 1; done'
+;ExecStartPre=/etc/step-renewer/bin/step-needs-renewal.sh
+
+; ExecStart renews the certificate, if ExecStartPre was successful.
+ExecStart=/etc/step-renewer/bin/step-get-certificate.sh
+
+; Try to reload or restart the systemd service that relies on this cert-renewer
+; If the relying service doesn't exist, forge ahead.
+; (In systemd <229, use `reload-or-try-restart` instead of `try-reload-or-restart`)
+ExecStartPost=/bin/sh -c ${EXEC_START_POST}
+
+[Install]
+WantedBy=multi-user.target

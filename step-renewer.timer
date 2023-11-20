@@ -1,0 +1,18 @@
+[Unit]
+Description=Step CA Certificate renewal timer
+Documentation=https://smallstep.com/docs/step-ca/certificate-authority-server-production
+
+[Timer]
+Persistent=true
+
+; Run the timer every hour from midnight to 5am.  Use `systemd-analyze calendar` to check.
+OnCalendar=0..5:00
+
+; Always run the timer on time.
+AccuracySec=1us
+
+; Add jitter to prevent a "thundering hurd" of simultaneous certificate renewals.
+RandomizedDelaySec=5m
+
+[Install]
+WantedBy=timers.target

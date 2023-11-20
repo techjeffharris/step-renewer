@@ -1,0 +1,23 @@
+STEP_RENEWER_PATH=/etc/step-renewer
+STEPPATH=/root/.step
+HOSTNAME=$(hostname -f)
+#ACME_LISTEN_ADDRESS=":80"
+# Optionally specify path served by existing web server for verification 
+#WEBROOT=/var/www/html
+# Subject Alternate Names can be added directly to the array below
+# e.g. SUBJECT_ALT_NAMES=("$HOSTNAME" "ANOTHERNAME" "YETANOTHERSTILL")
+#
+# If desired, another array can be appended
+# e.g. SUBJECT_ALT_NAMES+=("THATONENAME" "YETANOTHERNAME")
+#
+SUBJECT_ALT_NAMES=("$HOSTNAME")
+CA_CERT=$STEPPATH/certs/root_ca.crt
+CERT_LOCATION=$STEP_RENEWER_PATH/certs/$HOSTNAME.crt
+KEY_LOCATION=$STEP_RENEWER_PATH/private/$HOSTNAME.key
+CERT_CHAIN=$CERT_LOCATION.chain
+# EC by default, but some applications require RSA
+KTY=EC
+RENEWAL_FREQUENCY="1 day"
+RENEWAL_THRESHOLD="5 hours"
+EXPIRATION_TIME="5 am"
+EXEC_START_POST=$STEP_RENEWER_PATH/bin/step-post-update.sh

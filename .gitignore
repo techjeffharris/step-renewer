@@ -1,0 +1,9 @@
+*.swp
+*.pem
+*.cert
+*.crt
+*.cer
+*.pfx
+*.p12
+*.key
+step-renewer.cfg
